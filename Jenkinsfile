@@ -32,6 +32,15 @@ pipeline {
       }
     }
 
+     stage ('SAST') {
+      steps {
+        withSonarQubeEnv('sonar') {
+          sh 'mvn sonar:sonar'
+          sh 'cat target/sonar/report-task.txt'
+        }
+      }
+    }
+
 
     
     stage ('Build') {
@@ -42,7 +51,7 @@ pipeline {
     stage ('Deploy-To-Tomcat') {
        steps {
        sshagent(['tomcat']) {
-           sh 'scp -o StrictHostKeyChecking=no target/*.war ubuntu@3.110.214.4:/opt/tomcat/webapps/webapp.war'
+           sh 'scp -o StrictHostKeyChecking=no target/*.war ubuntu@13.126.130.55:/opt/tomcat/webapps/webapp.war'
         }      
      }       
     }
