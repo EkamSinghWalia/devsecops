@@ -70,7 +70,7 @@ pipeline {
 	 steps {
 	      script{
                 sh 'docker build -t newdevsecopsimage1 .' 
-        	sh 'docker container run -itd --name newwebserver1 -p 80:8080 newdevsecopsimage1'        
+        	sh 'docker container run -itd --name newwebserver1 -p 5000:8080 newdevsecopsimage1'        
 	      }
 	 }
       }
