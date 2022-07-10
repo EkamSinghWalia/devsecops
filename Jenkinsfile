@@ -66,7 +66,7 @@ pipeline {
                     touch Dockerfile
                     cat <<EOT>>Dockerfile
                     FROM tomcat
-                    ADD gameoflife.war /usr/local/tomcat/webapps/
+                    ADD WebApp.war /usr/local/tomcat/webapps/
                     CMD ["catalina.sh", "run"]
                     EXPOSE 8080
                     EOT
