@@ -1,8 +1,16 @@
+def getDockerTag() {
+ def tag = sh script: 'git rev-parse HEAD', returnStdout: true 
+ return tag
+}
+
 pipeline {
   agent any 
   tools {
     maven 'maven'
   }
+   environment {
+          Docker_tag = getDockerTag()
+      }
   stages {
     stage ('Initialize') {
       steps {
@@ -76,6 +84,17 @@ pipeline {
         }
 
     
+              stage('build'){
+		      steps {
+			      script{
+                sh 'docker build . -t deekshithsn/devops-training:$Docker_tag' withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
+    
+                sh 'docker login -u ekamsinghwalia -p $docker_password'
+                sh 'docker push ekamsinghwalia/devsecops:$Docker_tag'
+                }
+                
+			      }
+		      }
    stage ('DAST') {
       steps {
         sshagent(['zap']) {
