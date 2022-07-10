@@ -63,8 +63,8 @@ pipeline {
                     mkdir dockerimg
                     cd dockerimg
                     cp /var/lib/jenkins/workspace/hackwithme/target/WebApp.war .
-                    touch dockerfile
-                    cat <<EOT>>dockerfile
+                    touch Dockerfile
+                    cat <<EOT>>Dockerfile
                     FROM tomcat
                     ADD gameoflife.war /usr/local/tomcat/webapps/
                     CMD ["catalina.sh", "run"]
