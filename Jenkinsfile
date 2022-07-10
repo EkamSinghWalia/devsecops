@@ -70,15 +70,13 @@ pipeline {
 	 steps {
 	      script{
                 sh 'docker build . -t ekamsinghwalia/devsecops:$Docker_tag' withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
-    
-                sh 'docker login -u ekamsinghwalia -p $docker_password'
-                sh 'docker push ekamsinghwalia/devsecops:$Docker_tag'
-		sh 'docker container run -itd --name webserver$Docker_tag -p 8888:8080 ekamsinghwalia/devsecops:$Docker_tag'''
-
-                }
-                
+    			 sh 'docker login -u ekamsinghwalia -p $docker_password'
+                	 sh 'docker push ekamsinghwalia/devsecops:$Docker_tag'
+	}
+        	sh 'docker container run -itd --name webserver$Docker_tag -p 8888:8080 ekamsinghwalia/devsecops:$Docker_tag'        
 	      }
 	 }
+      }
    
 	stage ('DAST') {
       	  steps {
