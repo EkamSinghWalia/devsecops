@@ -69,8 +69,8 @@ pipeline {
       stage('DOCKER BUILD'){
 	 steps {
 	      script{
-                sh 'docker build -t newdevsecopsimage1 .' 
-        	sh 'docker container run -itd --name newwebserver1 -p 5000:8080 newdevsecopsimage1'        
+                sh 'docker build -t newdevsecopsimage2 .' 
+        	sh 'docker container run -itd --name newwebserver2 -p 5000:8080 newdevsecopsimage2'        
 	      }
 	 }
       }
