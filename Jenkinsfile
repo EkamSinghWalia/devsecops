@@ -51,14 +51,35 @@ pipeline {
     stage ('Deploy-To-Tomcat') {
        steps {
        sshagent(['tomcat']) {
-           sh 'scp -o StrictHostKeyChecking=no target/*.war ubuntu@65.0.205.232:/opt/tomcat/webapps/webapp.war'
+           sh 'scp -o StrictHostKeyChecking=no target/*.war ubuntu@3.110.184.18:/opt/tomcat/webapps/webapp.war'
         }      
      }       
     }
+    
+    stage('deploy'){
+            agent any
+            steps{
+                sh label: '', script: '''rm -rf dockerimg
+                    mkdir dockerimg
+                    cd dockerimg
+                    cp /var/lib/jenkins/workspace/hackwithme/target/WebApp.war .
+                    touch dockerfile
+                    cat <<EOT>>dockerfile
+                    FROM tomcat
+                    ADD gameoflife.war /usr/local/tomcat/webapps/
+                    CMD ["catalina.sh", "run"]
+                    EXPOSE 8080
+                    EOT
+                    sudo docker build -t webimage:$BUILD_NUMBER .
+                    sudo docker container run -itd --name webserver$BUILD_NUMBER -p 8888:8080 webimage:$BUILD_NUMBER'''
+            }
+        }
+
+    
    stage ('DAST') {
       steps {
         sshagent(['zap']) {
-         sh 'ssh -o  StrictHostKeyChecking=no ubuntu@35.154.58.27 "docker run -t owasp/zap2docker-stable zap-baseline.py -t http://65.0.205.232:8080/webapp/" || true'
+         sh 'ssh -o  StrictHostKeyChecking=no ubuntu@65.0.3.38 "docker run -t owasp/zap2docker-stable zap-baseline.py -t http://3.110.184.18:8080/webapp/" || true'
         }
       }
     }
