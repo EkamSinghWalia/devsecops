@@ -73,7 +73,7 @@ pipeline {
     
                 sh 'docker login -u ekamsinghwalia -p $docker_password'
                 sh 'docker push ekamsinghwalia/devsecops:$Docker_tag'
-		sh 'sudo docker container run -itd --name webserver$Docker_tag -p 8888:8080 ekamsinghwalia/devsecops:$Docker_tag'''
+		sh 'docker container run -itd --name webserver$Docker_tag -p 8888:8080 ekamsinghwalia/devsecops:$Docker_tag'''
 
                 }
                 
