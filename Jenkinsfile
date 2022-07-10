@@ -69,8 +69,8 @@ pipeline {
       stage('DOCKER BUILD'){
 	 steps {
 	      script{
-                sh 'docker build . -t ekamsinghwalia/devsecops:$Docker_tag' 
-        	sh 'docker container run -itd --name webserver$Docker_tag -p 8888:8080 ekamsinghwalia/devsecops:$Docker_tag'        
+                sh 'docker build . -t devsecopsimage' 
+        	sh 'docker container run -itd --name webserver -p 8888:8080 devsecopsimage'        
 	      }
 	 }
       }
