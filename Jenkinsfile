@@ -64,39 +64,22 @@ pipeline {
      }       
     }
     
-    stage('DOCKER BUILD'){
-            agent any
-            steps{
-                sh label: '', script: '''rm -rf dockerimg
-                    mkdir dockerimg
-                    cd dockerimg
-                    cp /var/lib/jenkins/workspace/hackwithme/target/WebApp.war .
-                    touch Dockerfile
-                    cat <<EOT>>Dockerfile
-                    FROM tomcat
-                    ADD WebApp.war /usr/local/tomcat/webapps/
-                    CMD ["catalina.sh", "run"]
-                    EXPOSE 8080
-                    EOT
-                    sudo docker build -t webimage:$BUILD_NUMBER .
-                    sudo docker container run -itd --name webserver$BUILD_NUMBER -p 8888:8080 webimage:$BUILD_NUMBER'''
-            }
-        }
-
+   
     
-              stage('build'){
-		      steps {
-			      script{
-                sh 'docker build . -t deekshithsn/devops-training:$Docker_tag' withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
+      stage('DOCKER BUILD'){
+	 steps {
+	      script{
+                sh 'docker build . -t ekamsinghwalia/devsecops:$Docker_tag' withCredentials([string(credentialsId: 'docker_password', variable: 'docker_password')]) {
     
                 sh 'docker login -u ekamsinghwalia -p $docker_password'
                 sh 'docker push ekamsinghwalia/devsecops:$Docker_tag'
                 }
                 
-			      }
-		      }
-   stage ('DAST') {
-      steps {
+	      }
+	 }
+   
+	stage ('DAST') {
+      	  steps {
         sshagent(['zap']) {
          sh 'ssh -o  StrictHostKeyChecking=no ubuntu@65.0.3.38 "docker run -t owasp/zap2docker-stable zap-baseline.py -t http://3.110.184.18:8080/webapp/" || true'
         }
