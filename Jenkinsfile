@@ -56,7 +56,7 @@ pipeline {
      }       
     }
     
-    stage('deploy'){
+    stage('DOCKER BUILD'){
             agent any
             steps{
                 sh label: '', script: '''rm -rf dockerimg
